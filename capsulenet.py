@@ -1,18 +1,18 @@
 """
 Keras implementation of CapsNet in Hinton's paper Dynamic Routing Between Capsules.
 The current version maybe only works for TensorFlow backend. Actually it will be straightforward to re-write to TF code.
-Adopting to other backends should be easy, but I have not tested this. 
+Adopting to other backends should be easy, but I have not tested this.
 
 Usage:
        python capsulenet.py
        python capsulenet.py --epochs 50
        python capsulenet.py --epochs 50 --routings 3
        ... ...
-       
+
 Result:
     Validation accuracy > 99.5% after 20 epochs. Converge to 99.66% after 50 epochs.
     About 110 seconds per epoch on a single GTX1070 GPU card
-    
+
 Author: Xifeng Guo, E-mail: `guoxifeng1990@163.com`, Github: `https://github.com/XifengGuo/CapsNet-Keras`
 """
 
@@ -30,7 +30,7 @@ K.set_image_data_format('channels_last')
 
 def CapsNet(input_shape, n_class, routings):
     """
-    A Capsule Network on MNIST.
+    A Capsule Network on CIFAR-10.
     :param input_shape: data shape, 3d, [width, height, channels]
     :param n_class: number of classes
     :param routings: number of routing iterations
@@ -200,6 +200,17 @@ def load_mnist():
     return (x_train, y_train), (x_test, y_test)
 
 
+def load_cifar10():
+    from keras.datasets import cifar10
+    (x_train, y_train), (x_test, y_test) = cifar10.load_data()
+
+    x_train = x_train.reshape(-1, 32, 32, 1).astype('float32') / 255.
+    x_test = x_test.reshape(-1, 32, 32, 1).astype('float32') / 255.
+    y_train = to_categorical(y_train.astype('float32'))
+    y_test = to_categorical(y_test.astype('float32'))
+    return (x_train, y_train), (x_test, y_test)
+
+
 if __name__ == "__main__":
     import os
     import argparse
@@ -207,7 +218,7 @@ if __name__ == "__main__":
     from keras import callbacks
 
     # setting the hyper parameters
-    parser = argparse.ArgumentParser(description="Capsule Network on MNIST.")
+    parser = argparse.ArgumentParser(description="Capsule Network on CIFAR-10.")
     parser.add_argument('--epochs', default=50, type=int)
     parser.add_argument('--batch_size', default=100, type=int)
     parser.add_argument('--lr', default=0.001, type=float,
@@ -236,7 +247,8 @@ if __name__ == "__main__":
         os.makedirs(args.save_dir)
 
     # load data
-    (x_train, y_train), (x_test, y_test) = load_mnist()
+    # (x_train, y_train), (x_test, y_test) = load_mnist()
+    (x_train, y_train), (x_test, y_test) = load_cifar10()
 
     # define model
     model, eval_model, manipulate_model = CapsNet(input_shape=x_train.shape[1:],
