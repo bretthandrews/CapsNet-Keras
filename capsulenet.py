@@ -204,8 +204,8 @@ def load_cifar10():
     from keras.datasets import cifar10
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
 
-    x_train = x_train.reshape(-1, 32, 32, 1).astype('float32') / 255.
-    x_test = x_test.reshape(-1, 32, 32, 1).astype('float32') / 255.
+    x_train = x_train.reshape(-1, 32, 32, 3).astype('float32') / 255.
+    x_test = x_test.reshape(-1, 32, 32, 3).astype('float32') / 255.
     y_train = to_categorical(y_train.astype('float32'))
     y_test = to_categorical(y_test.astype('float32'))
     return (x_train, y_train), (x_test, y_test)
