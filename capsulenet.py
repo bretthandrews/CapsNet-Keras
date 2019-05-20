@@ -47,14 +47,14 @@ def CapsNet(input_shape, n_class, routings):
     # Conventional Conv2D layers but more than in Sabour+2017
     conv1 = layers.Conv2D(filters=64, kernel_size=(3, 3), activation="relu")(x)
     conv2 = layers.Conv2D(filters=64, kernel_size=(3, 3), activation="relu")(conv1)
-    pool1 = layers.AveragePooling2D((2, 2))(conv2)
-    conv3 = layers.Conv2D(filters=128, kernel_size=(3, 3), activation="relu")(pool1)
+    conv3 = layers.Conv2D(filters=64, kernel_size=(3, 3), activation="relu")(conv2)
     conv4 = layers.Conv2D(filters=128, kernel_size=(3, 3), activation="relu")(conv3)
+    conv5 = layers.Conv2D(filters=128, kernel_size=(3, 3), activation="relu")(conv4)
 
     # Layer 2: Conv2D layer with `squash` activation, then reshape to
     # [None, num_capsule, dim_capsule]
     primarycaps = PrimaryCap(
-        conv4, dim_capsule=8, n_channels=64, kernel_size=3, strides=1, padding="valid"
+        conv5, dim_capsule=8, n_channels=64, kernel_size=9, strides=2, padding="valid"
     )
 
     # Layer 3: Capsule layer. Routing algorithm works here.
