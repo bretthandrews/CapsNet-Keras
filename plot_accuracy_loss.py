@@ -1,7 +1,7 @@
 # @Author: Brett Andrews <andrews>
 # @Date:   2019-05-14 16:05:88
 # @Last modified by:   andrews
-# @Last modified time: 2019-05-21 10:05:26
+# @Last modified time: 2019-05-21 10:05:33
 
 from pathlib import Path
 
@@ -18,7 +18,7 @@ def plot_accuracy_loss(run, path):
 
     if path is None:
         path_models = Path.home() / "projects" / "photoz" / "CapsNet-Keras" / "models"
-        path = path_models / run.split("_")[0] / run
+        path = path_models / run.split("_")[0] / run / "results"
 
     else:
         run = None
