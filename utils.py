@@ -1,7 +1,10 @@
+import time
+
 import numpy as np
 from matplotlib import pyplot as plt
 import csv
 import math
+from keras import callbacks
 import pandas
 
 def plot_log(filename, show=True):
@@ -49,8 +52,17 @@ def combine_images(generated_images, height=None, width=None):
             img[:, :, 0]
     return image
 
+
+class TimeHistory(keras.callbacks.Callback):
+    def on_train_begin(self, logs={}):
+        self.times = []
+
+    def on_epoch_begin(self, epoch, logs={}):
+        self.epoch_time_start = time.time()
+
+    def on_epoch_end(self, epoch, logs={}):
+        self.times.append(time.time() - self.epoch_time_start)
+
+
 if __name__=="__main__":
     plot_log('result/log.csv')
-
-
-

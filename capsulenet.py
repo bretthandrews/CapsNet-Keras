@@ -21,7 +21,7 @@ from keras import layers, models, optimizers
 from keras import backend as K
 from keras.utils import to_categorical
 import matplotlib.pyplot as plt
-from utils import combine_images
+from utils import combine_images, TimeHistory
 from PIL import Image
 from capsulelayers import CapsuleLayer, PrimaryCap, Length, Mask
 
@@ -108,7 +108,7 @@ def train(model, data, args):
     checkpoint = callbacks.ModelCheckpoint(args.save_dir + '/weights-{epoch:02d}.h5', monitor='val_capsnet_acc',
                                            save_best_only=True, save_weights_only=True, verbose=1)
     lr_decay = callbacks.LearningRateScheduler(schedule=lambda epoch: args.lr * (args.lr_decay ** epoch))
-
+    timing = TimeHistory()
     # compile the model
     model.compile(optimizer=optimizers.Adam(lr=args.lr),
                   loss=[margin_loss, 'mse'],
@@ -135,8 +135,10 @@ def train(model, data, args):
                         steps_per_epoch=int(y_train.shape[0] / args.batch_size),
                         epochs=args.epochs,
                         validation_data=[[x_test, y_test], [y_test, x_test]],
-                        callbacks=[log, tb, checkpoint, lr_decay])
+                        callbacks=[log, tb, checkpoint, lr_decay, timing])
     # End: Training with data augmentation -----------------------------------------------------------------------#
+
+    print("Time per epoch", timing.times)
 
     model.save_weights(args.save_dir + '/trained_model.h5')
     print('Trained model saved to \'%s/trained_model.h5\'' % args.save_dir)
