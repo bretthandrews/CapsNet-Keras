@@ -50,6 +50,11 @@ def CapsNet(input_shape, n_class, routings):
     pool1 = layers.AveragePooling2D((2, 2))(conv2)
     conv3 = layers.Conv2D(128, (3, 3), activation="relu")(pool1)
     conv4 = layers.Conv2D(128, (3, 3), activation="relu")(conv3)
+    print("conv1 shape", conv1.output_shape)
+    print("conv2 shape", conv2.output_shape)
+    print("pool1 shape", pool1.output_shape)
+    print("conv3 shape", conv3.output_shape)
+    print("conv4 shape", conv4.output_shape)
     conv4 = layers.Reshape((-1, 128))(conv4)
 
     # Layer 2: Conv2D layer with `squash` activation, then reshape to
