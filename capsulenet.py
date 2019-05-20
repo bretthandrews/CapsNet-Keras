@@ -44,15 +44,12 @@ def CapsNet(input_shape, n_class, routings):
     """
     x = layers.Input(shape=input_shape)
 
-    # Layer 1: Just a conventional Conv2D layer
-    conv1 = layers.Conv2D(
-        filters=256,
-        kernel_size=9,
-        strides=1,
-        padding="valid",
-        activation="relu",
-        name="conv1",
-    )(x)
+    # Conventional Conv2D layers but more than in Sabour+2017
+    x = layers.Conv2D(64, (3, 3), activation="relu")(x)
+    x = layers.Conv2D(64, (3, 3), activation="relu")(x)
+    x = layers.AveragePooling2D((2, 2))(x)
+    x = layers.Conv2D(128, (3, 3), activation="relu")(x)
+    conv1 = layers.Conv2D(128, (3, 3), activation="relu")(x)
 
     # Layer 2: Conv2D layer with `squash` activation, then reshape to
     # [None, num_capsule, dim_capsule]
