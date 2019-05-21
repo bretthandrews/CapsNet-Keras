@@ -45,11 +45,11 @@ def CapsNet(input_shape, n_class, routings):
     x = layers.Input(shape=input_shape)
 
     # Conventional Conv2D layers but more than in Sabour+2017
-    conv1 = layers.Conv2D(64, (3, 3), activation="relu")(x)
-    conv2 = layers.Conv2D(64, (3, 3), activation="relu")(conv1)
+    conv1 = layers.Conv2D(filters=64, kernel_size=(3, 3), activation="relu")(x)
+    conv2 = layers.Conv2D(filters=64, kernel_size=(3, 3), activation="relu")(conv1)
     pool1 = layers.AveragePooling2D((2, 2))(conv2)
-    conv3 = layers.Conv2D(128, (3, 3), activation="relu")(pool1)
-    conv4 = layers.Conv2D(128, (3, 3), activation="relu")(conv3)
+    conv3 = layers.Conv2D(filters=128, kernel_size=(3, 3), activation="relu")(pool1)
+    conv4 = layers.Conv2D(filters=128, kernel_size=(3, 3), activation="relu")(conv3)
 
     # Layer 2: Conv2D layer with `squash` activation, then reshape to
     # [None, num_capsule, dim_capsule]
@@ -353,9 +353,6 @@ if __name__ == "__main__":
         routings=args.routings,
     )
     model.summary()
-
-    for layer in model.layers:
-        print(layer.output_shape)
 
     # train or test
     if args.weights is not None:  # init the model weights with provided one
