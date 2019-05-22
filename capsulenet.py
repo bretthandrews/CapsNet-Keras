@@ -334,7 +334,7 @@ if __name__ == "__main__":
         "--dataset", default="mnist", help="Available datasets: {'mnist'}, 'cifar10'."
     )
     args = parser.parse_args()
-    print(f"\nargs: {args}\n")
+    print(args)
 
     if not os.path.exists(args.save_dir):
         os.makedirs(args.save_dir)
