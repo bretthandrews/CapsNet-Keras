@@ -186,7 +186,7 @@ def train(model, data, args):
             batch_size=args.batch_size,
             epochs=args.epochs,
             validation_data=[[x_test, y_test], [y_test, x_test]],
-            callbacks=[log, tb, checkpoint, lr_decay],
+            callbacks=[log, tb, checkpoint, lr_decay, timing],
         )
 
     print("Time per epoch", timing.times)
