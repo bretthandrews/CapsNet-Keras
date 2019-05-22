@@ -308,7 +308,7 @@ if __name__ == "__main__":
         "--shift_fraction",
         default=0,
         type=float,
-        help="Fraction of pixels to shift at most in each direction.,
+        help="Fraction of pixels to shift at most in each direction.",
     )
     parser.add_argument(
         "--debug", action="store_true", help="Save weights by TensorBoard"
