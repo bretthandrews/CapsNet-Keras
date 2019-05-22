@@ -347,6 +347,8 @@ if __name__ == "__main__":
     else:
         raise ValueError("Available datasets: 'mnist', 'cifar10'.")
 
+    (x_train, y_train), (x_test, y_test) = load_cifar10()
+
     # define model
     model, eval_model, manipulate_model = CapsNet(
         input_shape=x_train.shape[1:],
