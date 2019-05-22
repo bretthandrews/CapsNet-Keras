@@ -327,9 +327,10 @@ if __name__ == "__main__":
         default=None,
         help="The path of the saved weights. Should be specified when testing",
     )
-    parser.add_argument(
-        "--data_augmentation", default=False, help="Do data augmentation."
-    )
+    parser.add_argument('--data_augmentation', dest='data_augmentation', action='store_true')
+    parser.add_argument('--no-data_augmentation', dest='data_augmentation', action='store_false')
+    parser.set_defaults(data_augmentation=False)
+
     args = parser.parse_args()
     print(args)
 
