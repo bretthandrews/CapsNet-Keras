@@ -152,33 +152,42 @@ def train(model, data, args):
         metrics={"capsnet": "accuracy"},
     )
 
-    """
-    # Training without data augmentation:
-    model.fit([x_train, y_train], [y_train, x_train], batch_size=args.batch_size, epochs=args.epochs,
-              validation_data=[[x_test, y_test], [y_test, x_test]], callbacks=[log, tb, checkpoint, lr_decay])
-    """
+    if args.data_augmentation:
 
-    # Begin: Training with data augmentation -----------------------------------------------------#
-    def train_generator(x, y, batch_size, shift_fraction=0.):
-        train_datagen = ImageDataGenerator(
-            width_shift_range=shift_fraction, height_shift_range=shift_fraction
-        )  # shift up to 2 pixel for MNIST
-        generator = train_datagen.flow(x, y, batch_size=batch_size)
-        while 1:
-            x_batch, y_batch = generator.next()
-            yield ([x_batch, y_batch], [y_batch, x_batch])
+        def train_generator(x, y, batch_size, shift_fraction=0.):
+            # shift up to 2 pixel for MNIST
+            train_datagen = ImageDataGenerator(
+                width_shift_range=shift_fraction, height_shift_range=shift_fraction
+            )
+            generator = train_datagen.flow(x, y, batch_size=batch_size)
+            while 1:
+                x_batch, y_batch = generator.next()
+                yield ([x_batch, y_batch], [y_batch, x_batch])
 
-    # Training with data augmentation. If shift_fraction=0., also no augmentation.
-    model.fit_generator(
-        generator=train_generator(
-            x_train, y_train, args.batch_size, args.shift_fraction
-        ),
-        steps_per_epoch=int(y_train.shape[0] / args.batch_size),
-        epochs=args.epochs,
-        validation_data=[[x_test, y_test], [y_test, x_test]],
-        callbacks=[log, tb, checkpoint, lr_decay, timing],
-    )
-    # End: Training with data augmentation -------------------------------------------------------#
+        assert args.shift_fraction != 0, "No data augmentation if ``shift_fraction`` == 0."
+
+        model.fit_generator(
+            generator=train_generator(
+                x_train, y_train, args.batch_size, args.shift_fraction
+            ),
+            steps_per_epoch=int(y_train.shape[0] / args.batch_size),
+            epochs=args.epochs,
+            validation_data=[[x_test, y_test], [y_test, x_test]],
+            callbacks=[log, tb, checkpoint, lr_decay, timing],
+        )
+
+    else:
+
+        assert args.shift_fraction == 0, "Set ``data_augmentation`` flag to shift pixels."
+
+        model.fit(
+            [x_train, y_train],
+            [y_train, x_train],
+            batch_size=args.batch_size,
+            epochs=args.epochs,
+            validation_data=[[x_test, y_test], [y_test, x_test]],
+            callbacks=[log, tb, checkpoint, lr_decay, timing],
+        )
 
     print("Time per epoch", timing.times)
 
@@ -297,7 +306,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--shift_fraction",
-        default=0.1,
+        default=0,
         type=float,
         help="Fraction of pixels to shift at most in each direction.",
     )
@@ -318,6 +327,10 @@ if __name__ == "__main__":
         default=None,
         help="The path of the saved weights. Should be specified when testing",
     )
+    parser.add_argument('--data_augmentation', dest='data_augmentation', action='store_true')
+    parser.add_argument('--no-data_augmentation', dest='data_augmentation', action='store_false')
+    parser.set_defaults(data_augmentation=False)
+
     args = parser.parse_args()
     print(args)
 
