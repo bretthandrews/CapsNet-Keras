@@ -1,7 +1,7 @@
 # @Author: Brett Andrews <andrews>
 # @Date:   2019-05-14 16:05:88
 # @Last modified by:   andrews
-# @Last modified time: 2019-05-20 10:05:90
+# @Last modified time: 2019-05-22 14:05:00
 
 import argparse
 from pathlib import Path
@@ -20,7 +20,7 @@ assert (args.run is not None) or (args.path is not None), "Must provide `model` 
 
 if args.path is None:
     path_models = Path.home() / "projects" / "photoz" / "CapsNet-Keras" / "models"
-    path = path_models / args.run.split("_")[0] / args.run
+    path = path_models / args.run.split("_")[0] / args.run / "result"
 
 else:
     run = None
