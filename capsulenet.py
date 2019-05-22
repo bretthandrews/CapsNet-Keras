@@ -330,7 +330,9 @@ if __name__ == "__main__":
     parser.add_argument('--data_augmentation', dest='data_augmentation', action='store_true')
     parser.add_argument('--no-data_augmentation', dest='data_augmentation', action='store_false')
     parser.set_defaults(data_augmentation=False)
-
+    parser.add_argument(
+        "--dataset", default="mnist", help="Available datasets: {'mnist'}, 'cifar10'."
+    )
     args = parser.parse_args()
     print(args)
 
@@ -338,8 +340,12 @@ if __name__ == "__main__":
         os.makedirs(args.save_dir)
 
     # load data
-    # (x_train, y_train), (x_test, y_test) = load_mnist()
-    (x_train, y_train), (x_test, y_test) = load_cifar10()
+    if args.dataset == "mnist":
+        (x_train, y_train), (x_test, y_test) = load_mnist()
+    elif args.dataset == "cifar10":
+        (x_train, y_train), (x_test, y_test) = load_cifar10()
+    else:
+        raise ValueError("Available datasets: 'mnist', 'cifar10'.")
 
     # define model
     model, eval_model, manipulate_model = CapsNet(
