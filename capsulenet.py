@@ -324,7 +324,7 @@ if __name__ == "__main__":
     parser.add_argument('--no-data_augmentation', dest='data_augmentation', action='store_false')
     parser.set_defaults(data_augmentation=False)
     parser.add_argument(
-        "--dataset", default="mnist", help="Available datasets: {'mnist'}, 'cifar10'."
+        "--dataset", default="cifar10", help="Available datasets: {'cifar10'}, 'mnist'."
     )
     args = parser.parse_args()
     print(f"\nargs: {args}\n")
