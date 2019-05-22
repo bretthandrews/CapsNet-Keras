@@ -9,9 +9,8 @@ Author: Xifeng Guo, E-mail: `guoxifeng1990@163.com`,
 Github: `https://github.com/XifengGuo/CapsNet-Keras`
 """
 
-from keras import initializers, layers
+from keras import activations, initializers, layers
 import keras.backend as K
-import tensorflow as tf
 
 
 class Length(layers.Layer):
@@ -175,14 +174,14 @@ class CapsuleLayer(layers.Layer):
         # Begin: Routing algorithm ---------------------------------------------------------------#
         # The prior for coupling coefficient, initialized as zeros.
         # b.shape = [None, self.num_capsule, self.input_num_capsule].
-        b = tf.zeros(
+        b = K.zeros(
             shape=[K.shape(inputs_hat)[0], self.num_capsule, self.input_num_capsule]
         )
 
         assert self.routings > 0, "The routings should be > 0."
         for i in range(self.routings):
             # c.shape=[batch_size, num_capsule, input_num_capsule]
-            c = tf.nn.softmax(b, dim=1)
+            c = activations.softmax(b, axis=1)
 
             # c.shape =  [batch_size, num_capsule, input_num_capsule]
             # inputs_hat.shape=[None, num_capsule, input_num_capsule, dim_capsule]
