@@ -1,7 +1,11 @@
 # @Author: Brett Andrews <andrews>
 # @Date:   2019-05-14 16:05:88
 # @Last modified by:   andrews
-# @Last modified time: 2019-05-22 21:05:18
+<<<<<<< HEAD
+# @Last modified time: 2019-05-22 21:05:51
+=======
+# @Last modified time: 2019-05-22 21:05:51
+>>>>>>> refs/remotes/origin/enhancement-1-more_conv_layers
 
 from pathlib import Path
 
